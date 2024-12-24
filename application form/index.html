@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+        
+        .form-container {
+            width: 60%;
+            margin: 20px auto;
+            background: #1e4d6b;
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 38px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .form-grid>div {
+            display: grid;
+            grid-template-columns: 30% 1fr;
+        }
+        
+        .form-grid label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .form-grid input,
+        .form-grid select {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        .form-grid input[type="checkbox"],
+        .form-grid input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .options-group {
+            grid-column: span 2;
+            /* Makes these sections span two columns */
+        }
+        
+        .options-group label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .buttons input {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: rgb(213, 58, 30);
+            color: white;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        
+        .buttons input:hover {
+            background-color: darkorange;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Application Form</h2>
+        <form action="save.php" method="post">
+            <div class="form-grid">
+                <!-- First Name -->
+                <div>
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+                <!-- Last Name -->
+                <div>
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+
+                <!-- Date of Birth -->
+                <div>
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                <!-- Age -->
+                <div>
+                    <label for="age">Age:</label>
+
+                    <input type="number" id="age" name="age" required>
+                </div>
+
+                <!-- Gender -->
+                <div>
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="select option">select option</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <!-- Email -->
+                <div>
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <!-- Position -->
+                <div class="options-group">
+                    <label>Positions Available:</label>
+                    <label><input type="radio" name="position" value="Junior Developer" > Junior Developer</label>
+                    <label><input type="radio" name="position" value="Mid-level Developer"> Mid-level Developer</label>
+                    <label><input type="radio" name="position" value="Senior Developer"> Senior Developer</label>
+                </div>
+                <div class="options-group">
+                    <label>Programming Languages:</label>
+                    <label><input type="checkbox" name="languages[]" value="Java"> Java</label>
+                    <label><input type="checkbox" name="languages[]" value="JavaScript"> JavaScript</label>
+                    <label><input type="checkbox" name="languages[]" value="Python"> Python</label>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password">Password:</label>
+
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <!-- Confirm Password -->
+                <div>
+                    <label for="confirm_password">Confirm Password:</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="buttons">
+                <input type="submit" value="Submit">
+                <input type="reset" value="Reset">
+            </div>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dob = document.getElementById("dob");
+            const age = document.getElementById("age");
+            const password = document.getElementById("password");
+            const confirmPassword = document.getElementById("confirm_password");
+            const form = document.querySelector("form");
+
+            // Calculate age when the date of birth changes
+            dob.addEventListener("input", () => {
+                if (dob.value) {
+                    const birthDate = new Date(dob.value);
+                    const today = new Date();
+                    let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+                    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+                    // Adjust age if the birth month hasn't occurred yet this year
+                    if (
+                        monthDifference < 0 ||
+                        (monthDifference === 0 && today.getDate() < birthDate.getDate())
+                    ) {
+                        calculatedAge--;
+                    }
+
+                    age.value = calculatedAge > 0 ? calculatedAge : 0; // Ensure non-negative age
+                }
+            });
+
+            // Password validation
+            confirmPassword.addEventListener("input", () => {
+                if (confirmPassword.value !== password.value) {
+                    confirmPassword.setCustomValidity("Passwords do not match");
+                } else {
+                    confirmPassword.setCustomValidity("");
+                }
+            });
+
+            form.addEventListener("submit", (event) => {
+                if (password.value !== confirmPassword.value) {
+                    event.preventDefault();
+                    alert("Passwords do not match. Please correct them.");
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
