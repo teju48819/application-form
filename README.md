@@ -39,8 +39,6 @@ application-form/
 3. Open `index.html` in your browser.
 
 
-
-
 ## 🎯 Purpose
 
 This project was created to practice frontend web development, form design, responsive layouts, and JavaScript form validation.
